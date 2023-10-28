@@ -1,28 +1,11 @@
-import requests
-import time
+from environs import Env
 
+env = Env()  # Создаем экземпляр класса Env
+env.read_env()  # Методом read_env() читаем файл .env и загружаем из него переменные в окружение
 
-API_URL: str = 'https://api.telegram.org/bot'
-BOT_TOKEN: str = '6042745819:AAFmNd8jhEx3-mkHAyYz5dbTnkhxAyecuoQ'
-TEXT: str = 'Ура! Классный апдейт!'
-MAX_COUNTER: int = 100
+bot_token = env('BOT_TOKEN')  # Сохраняем значение переменной окружения в переменную bot_token
+admin_id = env.int('ADMIN_ID')  # Преобразуем значение переменной окружения к типу int
+# и сохраняем в переменной admin_id
 
-offset: int = -2
-counter: int = 0
-chat_id: int
-
-
-while counter < MAX_COUNTER:
-
-    print('attempt =', counter)  #Чтобы видеть в консоли, что код живет
-
-    updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
-
-    if updates['result']:
-        for result in updates['result']:
-            offset = result['update_id']
-            chat_id = result['message']['from']['id']
-            requests.get(f'{API_URL}{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={TEXT}')
-
-    time.sleep(1)
-    counter += 1
+print(bot_token)
+print(admin_id)
